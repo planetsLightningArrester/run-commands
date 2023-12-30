@@ -1,0 +1,85 @@
+#!/bin/bash
+
+LAST_COMMAND="${__cmd_status:?}"
+
+# Show error exit code if there is one
+if [[ $LAST_COMMAND != 0 ]]; then
+	PS1="${TC_DARKGRAY}(${TC_LIGHTRED}ERROR${TC_DARKGRAY})-(${TC_RED}Exit Code ${TC_LIGHTRED}${LAST_COMMAND}${TC_DARKGRAY})-(${TC_RED}"
+	if [[ $LAST_COMMAND == 1 ]]; then
+		PS1+="General error"
+	elif [ "$LAST_COMMAND" == 2 ]; then
+		PS1+="Missing keyword, command, or permission problem"
+	elif [ "$LAST_COMMAND" == 126 ]; then
+		PS1+="Permission problem or command is not an executable"
+	elif [ "$LAST_COMMAND" == 127 ]; then
+		PS1+="Command not found"
+	elif [ "$LAST_COMMAND" == 128 ]; then
+		PS1+="Invalid argument to exit"
+	elif [ "$LAST_COMMAND" == 129 ]; then
+		PS1+="Fatal error signal 1"
+	elif [ "$LAST_COMMAND" == 130 ]; then
+		PS1+="Script terminated by Control-C"
+	elif [ "$LAST_COMMAND" == 131 ]; then
+		PS1+="Fatal error signal 3"
+	elif [ "$LAST_COMMAND" == 132 ]; then
+		PS1+="Fatal error signal 4"
+	elif [ "$LAST_COMMAND" == 133 ]; then
+		PS1+="Fatal error signal 5"
+	elif [ "$LAST_COMMAND" == 134 ]; then
+		PS1+="Fatal error signal 6"
+	elif [ "$LAST_COMMAND" == 135 ]; then
+		PS1+="Fatal error signal 7"
+	elif [ "$LAST_COMMAND" == 136 ]; then
+		PS1+="Fatal error signal 8"
+	elif [ "$LAST_COMMAND" == 137 ]; then
+		PS1+="Fatal error signal 9"
+	elif [ "$LAST_COMMAND" -gt 255 ]; then
+		PS1+="Exit status out of range"
+	else
+		PS1+="Unknown error code"
+	fi
+	PS1+="${TC_DARKGRAY})${TC_NOCOLOR}\n"
+else
+	PS1=""
+fi
+
+# Time
+PS1+="${TC_DARKGRAY}$(date +"%H:%M:%S") ${TC_NOCOLOR}"
+
+# Print user if root or dvcmida
+[[ -f /bin/whoami ]] && WHO_AM_I="$(/bin/whoami)"
+[[ -f /usr/bin/whoami ]] && WHO_AM_I="$(/usr/bin/whoami)"
+[[ "$WHO_AM_I" == "dvcmida" ]] || [[ $EUID -eq 0 ]] && PS1+="${TC_RED}\u${TC_DARKGRAY}:"
+
+# Current directory
+PS1+="${TC_BROWN}\w${TC_DARKGRAY}"
+
+# If DV_VOBROOT, append at the beginning
+[[ -n "$DV_VOBROOT" ]] && PS1+=" ${TC_RED}✘ ${TC_LIGHTBLUE}$(basename "$DV_VOBROOT")${TC_NOCOLOR}"
+
+# Add the git branch to the end, if any
+[[ -n "$(git rev-parse --show-toplevel 2>/dev/null)" ]] && PS1+=" ${TC_GREEN}${TC_LIGHTBLUE}$(git branch --show-current)${TC_NOCOLOR}"
+
+# Skip to the next line
+PS1+="\n"
+
+if [[ -n "${DISTRO_NAME}" ]]; then
+	PS1+="${DISTRO_NAME} ${DISTRO_VERSION}"
+fi
+
+if [[ "$WHO_AM_I" == "root" ]] || [[ $EUID -eq 0 ]]; then
+	PS1+="${TC_RED}>${TC_NOCOLOR} " # Root user
+else
+	PS1+="${TC_GREEN}>${TC_NOCOLOR} " # Normal user
+fi
+
+# PS2 is used to continue a command using the \ character
+PS2="${TC_DARKGRAY}>${TC_NOCOLOR} "
+
+# PS3 is used to enter a number choice in a script
+PS3='Please enter a number from above list: '
+
+# PS4 is used for tracing a script in debug mode
+PS4='${TC_DARKGRAY}+${TC_NOCOLOR} '
+
+# EOF

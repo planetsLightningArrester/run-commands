@@ -1,0 +1,9 @@
+#!/bin/bash -e
+#
+# Create a tar.gz and required path
+# author: @planetsLightningArrester
+
+mkdir -p "$(dirname "$1")"
+tar -cvzf "$@"
+
+# EOF

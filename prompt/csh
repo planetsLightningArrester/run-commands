@@ -1,0 +1,84 @@
+#!/bin/csh
+# shellcheck disable=all
+
+setenv LAST_COMMAND $__cmd_status
+
+setenv PS1 ""
+
+# Show error exit code if there is one
+if ( $LAST_COMMAND != 0 ) then
+	setenv PS1 "${TC_DARKGRAY}(${TC_LIGHTRED}ERROR${TC_DARKGRAY})-(${TC_RED}Exit Code ${TC_LIGHTRED}${LAST_COMMAND}${TC_DARKGRAY})-(${TC_RED}"
+	if ( $LAST_COMMAND == 1 ) then
+		setenv PS1 "${PS1}General error"
+	else if ( $LAST_COMMAND == 2 ) then
+		setenv PS1 "${PS1}Missing keyword, command, or permission problem"
+	else if ( $LAST_COMMAND == 126 ) then
+		setenv PS1 "${PS1}Permission problem or command is not an executable"
+	else if ( $LAST_COMMAND == 127 ) then
+		setenv PS1 "${PS1}Command not found"
+	else if ( $LAST_COMMAND == 128 ) then
+		setenv PS1 "${PS1}Invalid argument to exit"
+	else if ( $LAST_COMMAND == 129 ) then
+		setenv PS1 "${PS1}Fatal error signal 1"
+	else if ( $LAST_COMMAND == 130 ) then
+		setenv PS1 "${PS1}Script terminated by Control-C"
+	else if ( $LAST_COMMAND == 131 ) then
+		setenv PS1 "${PS1}Fatal error signal 3"
+	else if ( $LAST_COMMAND == 132 ) then
+		setenv PS1 "${PS1}Fatal error signal 4"
+	else if ( $LAST_COMMAND == 133 ) then
+		setenv PS1 "${PS1}Fatal error signal 5"
+	else if ( $LAST_COMMAND == 134 ) then
+		setenv PS1 "${PS1}Fatal error signal 6"
+	else if ( $LAST_COMMAND == 135 ) then
+		setenv PS1 "${PS1}Fatal error signal 7"
+	else if ( $LAST_COMMAND == 136 ) then
+		setenv PS1 "${PS1}Fatal error signal 8"
+	else if ( $LAST_COMMAND == 137 ) then
+		setenv PS1 "${PS1}Fatal error signal 9"
+	else if ( $LAST_COMMAND -gt 255 ) then
+		setenv PS1 "${PS1}Exit status out of range"
+	else
+		setenv PS1 "${PS1}Unknown error code"
+	endif
+	setenv PS1 "${PS1}${TC_DARKGRAY})${TC_NOCOLOR}\n\n"
+else
+	setenv PS1 ""
+endif
+
+# Time
+setenv PS1 "${PS1}${TC_DARKGRAY}`date +"%H:%M:%S"` ${TC_DARKGRAY}"
+
+# Print user only if root or dvcmida
+test -f "/bin/whoami" && setenv WHO_AM_I `/bin/whoami`
+test -f "/usr/bin/whoami" && setenv WHO_AM_I `/usr/bin/whoami`
+test `id -u` -eq 0 || test "$WHO_AM_I" = "dvcmida" && setenv PS1 "${PS1}${TC_RED}%n${TC_DARKGRAY}:" # Root user
+
+# Current directory
+setenv PS1 "${PS1}${TC_BROWN}%~"
+
+# If DV_VOBROOT, append at the beginning
+if ( $?DV_VOBROOT ) then
+  setenv PS1 "${PS1} ${TC_RED}✘ ${TC_BLUE}`basename $DV_VOBROOT`";
+endif
+
+# Add the git branch to the end, if any
+setenv git_path `bash -c 'git rev-parse --show-toplevel 2>/dev/null'`
+test -n "$git_path" && setenv PS1 "${PS1} ${TC_GREEN}${TC_LIGHTBLUE}`git branch --show-current`"
+
+# Skip to the next line
+setenv PS1 "${PS1}\n"
+
+if ( $?DISTRO_NAME ) then
+	setenv PS1 "${PS1}${DISTRO_NAME} ${DISTRO_VERSION}"
+endif
+
+if ( `id -u` == 0 || "$WHO_AM_I" == "root" ) then
+  setenv PS1 "${PS1}${TC_RED}>${TC_NOCOLOR} " # Root user
+else
+	setenv PS1 "${PS1}${TC_GREEN}>${TC_NOCOLOR} " # Normal user
+endif
+
+set prompt="$PS1";
+
+# EOF

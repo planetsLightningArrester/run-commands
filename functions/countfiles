@@ -1,0 +1,9 @@
+#!/bin/bash -e
+#
+# Count all files (recursively) in the current folder
+# author: @planetsLightningArrester
+
+for t in files links directories; do echo "$(find . -type ${t:0:1} | wc -l)" $t; done 2>/dev/null
+
+# EOF
+

@@ -1,0 +1,31 @@
+{
+  "cSpell.words": [
+    "countfiles",
+    "DARKGRAY",
+    "DISTRO",
+    "freplace",
+    "ftext",
+    "LIGHTRED",
+    "mkdirg",
+    "NOCOLOR",
+    "precmd",
+    "realpath",
+    "setenv",
+    "setprompt",
+    "unsetenv"
+  ],
+  "files.watcherExclude": {
+    "**/python/lib/**/*": true
+  },
+  "shellcheck.exclude": [
+    "SC2016"
+  ],
+  "search.exclude": {
+    "python/lib/**/*": true
+  },
+  "files.associations": {
+    "*.s": "shellscript",
+    "*.conf": "properties",
+    "*.conf.local": "properties"
+  }
+}

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#########################################################################################
+# Q: What's this file?
+#   A: This file holds all user private envs in cross-shell format
+# Q: If this is cross-shell, why does it have a shebang?
+#   A: Just used to enable the linter provider
+# Q: How is this cross-shell?
+#   A: Basically, alias is "set-alias", and (un)setenv is a ./functions in Bash. Conditional
+#      statements are handled by the command `test`
+#      ! So, do not use "alias"! Use "set-alias"!
+#########################################################################################
+
+# Private envs
+#########################################################################################
+
+# Golang
+setenv GOPATH "$HOME/.local/go/dev"
+
+#########################################################################################
+
+# EOF

@@ -1,0 +1,15 @@
+#!/bin/bash -e
+#
+# Get the distro name
+# author: @planetsLightningArrester
+
+while IFS= read -r line; do
+	name=$(echo "$line" | sed -r -n "s/NAME=\"(.*)\"/\1/p")
+	if [[ -n "${name}" ]]; then
+		echo "${name}"
+		exit
+	fi
+done < <(cat /etc/*-release)
+
+# EOF
+

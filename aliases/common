@@ -1,0 +1,154 @@
+#!/bin/bash
+
+#########################################################################################
+# Q: What's this file?
+#   A: This file holds all useful alias in cross-shell format
+# Q: If this is cross-shell, why does it have a shebang?
+#   A: Just used to enable the linter provider
+# Q: How is this cross-shell?
+#   A: Basically, alias is "set-alias", and (un)setenv is a ./functions in Bash. Conditional
+#      statements are handled by the command `test`
+#      ! So, do not use "alias"! Use "set-alias"!
+#########################################################################################
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+set-alias alert 'notify-send --urgency=low -i "`[ $? = 0 ] && echo terminal || echo error`" "`history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\''`"'
+
+# Resource the rc
+set-alias resource 'test "$SHELL" = "/bin/bash" && source $HOME/.bashrc || source $HOME/.cshrc'
+set-alias rebash 'resource'
+set-alias recsh 'resource'
+
+# Edit the rc file
+set-alias ebash '$EDITOR "$HOME/run-commands/.bashrc"'
+set-alias ecsh '$EDITOR "$HOME/run-commands/.cshrc"'
+
+# Sync with the repo
+set-alias pullrc 'cd "$HOME/run-commands" && git pull origin main && cd -'
+
+# alias to show the date
+set-alias da 'date "+%Y-%m-%d %A %T %Z"'
+
+# alias to short form of realpath
+set-alias rp 'realpath'
+
+# Alias's to modified commands
+set-alias mv 'mv -i'
+set-alias mkdir 'mkdir -p'
+set-alias ps 'ps auxf'
+set-alias ping 'ping -c 10'
+set-alias less 'less -R'
+set-alias grep 'grep --color=auto'
+set-alias cls 'clear'
+set-alias apt-get 'sudo apt-get'
+set-alias vi 'vim'
+set-alias svi 'sudo vi'
+set-alias vis 'vim "+set si"'
+
+# Change directory aliases
+set-alias home 'cd ~'
+set-alias cd.. 'cd ..'
+set-alias .. 'cd ..'
+set-alias ... 'cd ../..'
+set-alias .... 'cd ../../..'
+set-alias ..... 'cd ../../../..'
+set-alias cdd 'cd ~/dump'
+set-alias cdr 'cd ~/run-commands'
+
+# Remove a directory and all files
+set-alias rmd 'rm -rf '
+set-alias rmda 'test ! -d ./.git && test ! -f ./.P4Config && rm -rf .* * || echo "Repository found! Cant use rmda"'
+
+# Alias's for multiple directory listing commands
+set-alias lhide 'ls -Alh'                                                                                                                                                                                                                                                                                                                                                                                                   # show hidden folders
+set-alias lcolor 'ls -aFh --color=always'                                                                                                                                                                                                                                                                                                                                                                                   # add colors and file type extensions
+set-alias lextension 'ls -lXBh'                                                                                                                                                                                                                                                                                                                                                                                             # sort by extension
+set-alias lsize 'ls -lSrh'                                                                                                                                                                                                                                                                                                                                                                                                  # sort by size
+set-alias lchange 'ls -lcrh'                                                                                                                                                                                                                                                                                                                                                                                                # sort by change time
+set-alias laccess 'ls -lurh'                                                                                                                                                                                                                                                                                                                                                                                                # sort by access time
+set-alias lrecursive 'ls -lRh'                                                                                                                                                                                                                                                                                                                                                                                              # recursive ls
+set-alias ldate 'ls -ltrh'                                                                                                                                                                                                                                                                                                                                                                                                  # sort by date
+set-alias lmore 'ls -alh | more'                                                                                                                                                                                                                                                                                                                                                                                            # pipe to `more`
+set-alias lwide 'ls -xAh'                                                                                                                                                                                                                                                                                                                                                                                                   # wide listing format
+set-alias ll 'ls -Fahls --color=auto'                                                                                                                                                                                                                                                                                                                                                                                       # long listing format
+set-alias labc 'ls -lhap'                                                                                                                                                                                                                                                                                                                                                                                                   # alphabetical order
+set-alias lfiles "ls -lh | grep -E -v '^d'"                                                                                                                                                                                                                                                                                                                                                                                 # list only files
+set-alias ldir "ls -lh | grep -E '^d'"                                                                                                                                                                                                                                                                                                                                                                                      # list only directories
+set-alias lsl 'printf "lhide: show hidden folders\nlcolor: add colors and file type extensions\nlextension: sort by extension\nlsize: sort by size\nlchange: sort by change time\nlaccess: sort by access time\nlrecursive: recursive ls\nldate: sort by date\nlmore: pipe to more\nlwide: wide listing format\nll: long listing format\nlabc: alphabetical order\nlfiles: list only files\nldir: list only directories\n"' # list all "ls"s
+
+# alias chmod commands
+set-alias mx 'chmod a+x'
+set-alias 000 'chmod -R 000'
+set-alias 500 'chmod -R 500'
+set-alias 600 'chmod -R 600'
+set-alias 644 'chmod -R 644'
+set-alias 666 'chmod -R 666'
+set-alias 700 'chmod -R 700'
+set-alias 744 'chmod -R 744'
+set-alias 755 'chmod -R 755'
+set-alias 777 'chmod -R 777'
+
+# Search command line history
+set-alias h "history | grep "
+
+# Search files in the current folder
+set-alias f "find . | grep "
+
+# Show open ports
+set-alias openports 'netstat -nape --inet'
+
+# Alias's for safe and forced reboots
+set-alias rebootsafe 'sudo shutdown -r now'
+set-alias rebootforce 'sudo shutdown -r -n now'
+
+# Alias's to show disk space and space used in a folder
+set-alias diskspace "du -S | sort -n -r | more"
+set-alias folders 'du -h --max-depth=1'
+set-alias folderssort 'find . -maxdepth 1 -type d -print0 | xargs -0 du -sk | sort -rn'
+set-alias tree 'tree -CAhF --dirsfirst'
+set-alias tree1 'tree -L 1'
+set-alias tree2 'tree -L 2'
+set-alias tree3 'tree -L 3'
+set-alias tree4 'tree -L 4'
+set-alias tree5 'tree -L 5'
+set-alias treed 'tree -CAFd'
+set-alias treed1 'treed -L 1'
+set-alias treed2 'treed -L 2'
+set-alias treed3 'treed -L 3'
+set-alias treed4 'treed -L 4'
+set-alias treed5 'treed -L 5'
+set-alias mountedinfo 'df -hT'
+
+# Alias's for archives
+set-alias mktar 'tar -cvf'
+set-alias mkbz2 'tar -cvjf'
+set-alias mkgz 'tar -cvzf'
+set-alias untar 'tar -xvf'
+set-alias unbz2 'tar -xvjf'
+set-alias ungz 'tar -xvzf'
+
+# SHA1
+set-alias sha1 'openssl sha1'
+
+# tmux
+set-alias tl 'tmux ls'
+set-alias ta 'tmux a -t'
+set-alias tn 'tmux new -s'
+set-alias tk 'tmux kill-session -t'
+# ? tmux-256color crashes vim and screen
+set-alias vim 'TERM=xterm-256color vim'
+set-alias screen 'TERM=xterm-256color screen'
+set-alias top 'TERM=xterm-256color top'
+
+# git
+set-alias g 'git'
+set-alias gs 'g status'
+set-alias ga 'g add'
+set-alias gc 'g commit'
+set-alias gca 'g commit --amend'
+set-alias gcan 'g commit --amend --no-edit'
+set-alias gl 'g log'
+set-alias gd 'g diff'
+
+# EOF

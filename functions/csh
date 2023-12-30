@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Calls csh setting the SHELL. For some reason, calling csh won't set the ${SHELL} env var.
+# This prevent issues when the global csh profile tries to source Perl scripts that read ${SHELL}
+# author: @planetsLightningArrester
+
+# ? If using tmux, ${TERM} is set to "tmux-256color" which is often unsupported by csh
+OLD_TERM="${TERM}"
+if [[ "${TERM}" == "tmux-256color" ]]; then
+	TERM="xterm-256color"
+fi
+
+OLD_SHELL="${SHELL}"
+SHELL=/bin/csh
+csh "$@"
+SHELL="${OLD_SHELL}"
+TERM="${OLD_TERM}"
+
+# EOF

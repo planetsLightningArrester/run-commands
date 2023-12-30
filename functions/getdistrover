@@ -1,0 +1,9 @@
+#!/bin/bash -e
+#
+# Get the distro version
+# author: @planetsLightningArrester
+
+cat /etc/*-release | sed -r -n "s/VERSION_ID=\"(.*)\"/\1/p"
+
+# EOF
+

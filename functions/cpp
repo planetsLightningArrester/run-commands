@@ -1,0 +1,32 @@
+#!/bin/bash -e
+#
+# Copy file or dir with a progress bar
+# author: @planetsLightningArrester
+# shellcheck disable=SC2059
+
+if [ -d "$1" ]; then
+	# ? Use rsync for directories
+	rsync -ah --progress "$1/" "$2"
+elif [ -f "$1" ]; then
+	set -e
+	strace -q -ewrite cp -- "$1" "$2" 2>&1 |
+		awk '{
+  count += $NF
+  if (count % 10 == 0) {
+    percent = count / total_size * 100
+    printf "%s\t%3d%% [", file_name, percent
+    for (i=0;i<=percent/4;i++)
+      printf "="
+      printf ">"
+      for (i=percent/4;i<25;i++)
+        printf " "
+        printf "] | %d s\r", systime() - start_time
+      }
+    }
+  END { print "" }' total_size="$(stat -c '%s' "$1")" count=0 start_time="$(date +%s | tr -d '\n')" file_name="$(basename "$1")"
+else
+	printf "\n[${TC_LIGHTRED}ERROR${TC_NOCOLOR}] Path '$1' not found.\n\n"
+	return-error
+fi
+
+# EOF

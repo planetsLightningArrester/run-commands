@@ -1,0 +1,44 @@
+#!/bin/bash -e
+#
+# Make `code` command available in terminals outside vscode
+# author: https://ianloic.com/2021/02/16/vscode-remote-and-the-command-line/
+# shellcheck disable=SC2012,SC2059
+
+bin_candidates=""
+if [[ -d "$HOME"/.vscode-server/cli ]]; then
+	bin_candidates="$(find "$HOME"/.vscode-server/cli -wholename "*bin/remote-cli/code")"
+elif [[ -d "$HOME"/.vscode-server/bin ]]; then
+	bin_candidates="$(find "$HOME"/.vscode-server/bin -wholename "*bin/remote-cli/code")"
+elif [[ -d "$HOME"/.vscode-server-insiders/cli ]]; then
+	bin_candidates="$(find "$HOME"/.vscode-server-insiders/cli -wholename "*bin/remote-cli/code-insiders")"
+elif [[ -d "$HOME"/.vscode-server-insiders/bin ]]; then
+	bin_candidates="$(find "$HOME"/.vscode-server-insiders/bin -wholename "*bin/remote-cli/code-insiders")"
+else
+	printf "\n[${TC_LIGHTRED}ERROR${TC_NOCOLOR}] No '~/.vscode-server' nor '~/.vscode-server-insiders' found\n\n" && exit 1
+fi
+
+i=1
+while IFS= read -r script; do
+
+	# Check the binary path
+	[[ ! -f ${script} ]] && printf "\n[${TC_LIGHTRED}ERROR${TC_NOCOLOR}] VSCode remote script not found\n\n" && exit 1
+
+	# Check the socket connection path. In WSL, the path is '/mnt/wslg/runtime-dir'
+	if [[ -d "/run/user/$UID" ]]; then
+		socket=$(ls /run/user/$UID/vscode-ipc-* -t | head -n"$i" | tail -1)
+		[[ -z ${socket} ]] && printf "\n[${TC_LIGHTRED}ERROR${TC_NOCOLOR}] VSCode IPC socket '$socket' not found\n\n" && exit 1
+	elif [[ -d /mnt/wslg/runtime-dir ]]; then
+		socket=$(ls /mnt/wslg/runtime-dir/vscode-ipc-* -t | head -n"$i" | tail -1)
+		[[ -z ${socket} ]] && printf "\n[${TC_LIGHTRED}ERROR${TC_NOCOLOR}] VSCode IPC socket '$socket' not found\n\n" && exit 1
+	fi
+	i=$((i + 1))
+
+	# Run the script
+	export VSCODE_IPC_HOOK_CLI=${socket}
+	${script} "$@" 2>/dev/null && exit 0
+
+done < <(echo "$bin_candidates")
+
+printf "\n[${TC_LIGHTRED}ERROR${TC_NOCOLOR}] Failed to find valid VS Code window\n\n" && exit 1
+
+# EOF

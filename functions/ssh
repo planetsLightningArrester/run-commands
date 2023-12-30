@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+/usr/bin/ssh -t "$1" /bin/bash
+
+# EOF
