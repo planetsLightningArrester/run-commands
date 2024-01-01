@@ -52,16 +52,10 @@ setenv PROMPT_COMMAND 'history -a'
 # Get the OS to print in prompt
 setenv _distro_name "`getdistro`"
 setenv DISTRO_VERSION "`getdistrover`"
-setenv RED "\033[0;31m"
-setenv GREEN "\033[0;32m"
-setenv MAGENTA "\033[0;35m"
-setenv YELLOW "\033[1;33m"
-setenv NOCOLOR "\033[0m"
-test "$_distro_name" = "Red Hat Enterprise Linux Workstation" && setenv DISTRO_NAME "${TC_RED}󱄛${TC_NOCOLOR}"
-test "$_distro_name" = "Red Hat Enterprise Linux" && setenv DISTRO_NAME "${TC_RED}󱄛${TC_NOCOLOR}"
+test "${_distro_name#*"Red Hat Enterprise Linux"}" != "${_distro_name}" && setenv DISTRO_NAME "${TC_RED}󱄛${TC_NOCOLOR}"
 test "$_distro_name" = "CentOS Linux" && setenv DISTRO_NAME "${TC_MAGENTA}${TC_NOCOLOR}"
 test "$_distro_name" = "SLES" && setenv DISTRO_NAME "${TC_GREEN}${TC_NOCOLOR}"
-test "$_distro_name" = "Ubuntu" && setenv DISTRO_NAME "${TC_YELLOW}${TC_NOCOLOR}"
+test "${_distro_name#*"Ubuntu"}" != "$_distro_name" && setenv DISTRO_NAME "${TC_YELLOW}${TC_NOCOLOR}"
 unsetenv _distro_name
 
 # VS Code and VS Code insiders
