@@ -9,6 +9,8 @@ if [[ $LAST_COMMAND != 0 ]]; then
 		PS1+="General error"
 	elif [ "$LAST_COMMAND" == 2 ]; then
 		PS1+="Missing keyword, command, or permission problem"
+	elif [ "$LAST_COMMAND" == 22 ]; then
+		PS1+="Invalid argument"
 	elif [ "$LAST_COMMAND" == 126 ]; then
 		PS1+="Permission problem or command is not an executable"
 	elif [ "$LAST_COMMAND" == 127 ]; then
