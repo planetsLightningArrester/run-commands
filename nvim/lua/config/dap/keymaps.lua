@@ -1,9 +1,7 @@
 -- Map debug adapter keymaps
 
 -- Map on which key
-require("which-key").register({
-  d = { name = "debug" },
-}, { prefix = "<leader>" })
+require("which-key").add({ prefix = "<leader>", group = "debug" })
 
 -- Toggle debug view
 vim.keymap.set("n", "<leader>dt", function()

@@ -1,7 +1,5 @@
 -- Map Perforce keymaps
-require("which-key").register({
-  p = { name = "perforce" },
-}, { prefix = "<leader>" })
+require("which-key").add({ prefix = "<leader>", group = "perforce" })
 
 -- p4 edit
 vim.keymap.set("n", "<leader>pe", function()
