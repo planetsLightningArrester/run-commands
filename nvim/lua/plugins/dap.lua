@@ -1,5 +1,6 @@
 -- Debug adapter (DAP) plugins
 return {
+  { "nvim-neotest/nvim-nio" },
   {
     "rcarriga/nvim-dap-ui",
     dependencies = {
