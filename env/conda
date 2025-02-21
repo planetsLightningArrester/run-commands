@@ -1,0 +1,17 @@
+#!/bin/bash
+# shellcheck disable=SC1091,SC2006
+
+#########################################################################################
+# Q: What's this file?
+#   A: This file holds all useful envs for conda in cross-shell format
+# Q: If this is cross-shell, why does it have a shebang?
+#   A: Just used to enable the linter provider
+# Q: How is this cross-shell?
+#   A: Basically, alias is "set-alias", and (un)setenv is a ./functions in Bash. Conditional
+#      statements are handled by the command `test`
+#      ! So, do not use "alias"! Use "set-alias"!
+#########################################################################################
+
+setenv shell_name "`basename "$SHELL"`"
+eval "$("${HOME}/apps/miniconda3/bin/conda" "shell.$shell_name" 'hook')"
+unsetenv shell_name

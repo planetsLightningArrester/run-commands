@@ -95,6 +95,9 @@ setenv TC_NOCOLOR "%{\033[0m%}"
 # Source common envs
 source "$HOME/run-commands/env/common";
 
+# Source common envs
+source "$HOME/run-commands/env/conda";
+
 # Source private envs. Leave it as the last to be sourced, so private envs gonna have higher prevalence
 test -e "$HOME/run-commands/env/.$USER" && source "$HOME/run-commands/env/.$USER";
 

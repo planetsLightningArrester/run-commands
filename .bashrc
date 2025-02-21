@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC1091
 
 #######################################################
 # Based aliases and scripts on zachbrowne.me
@@ -24,10 +24,10 @@ export nobeep
 
 # Enable bash programmable completion features in interactive shells
 if [ -f /usr/share/bash-completion/bash_completion ]; then
-	. /usr/share/bash-completion/bash_completion
+  . /usr/share/bash-completion/bash_completion
 elif [ -f /etc/bash_completion ]; then
-	# shellcheck source=/dev/null
-	. /etc/bash_completion
+  # shellcheck source=/dev/null
+  . /etc/bash_completion
 fi
 
 # Prevent Bash from escaping $ when completing paths with env vars
@@ -48,17 +48,17 @@ __host__="$(hostname)"
 # ? Only adding "functions/" to PATH wouldn't allow to source it
 functions="$(ls "$HOME"/run-commands/functions)"
 while IFS= read -r func; do
-	# Do  not overwrite Bash built-ins nor re-define set-alias
-	if [[ "$func" != "export.s" ]] && [[ "$func" != "unset.s" ]]; then
-		if [[ "$func" = *.s* ]]; then
-			set-alias "${func%.*}" "source $HOME/run-commands/functions/$func"
-		else
-			if [[ "$func" != "ssh" ]] || [[ "${__host__}" != "PC-${USER}" ]]; then
-				set-alias "${func%.*}" "$HOME/run-commands/functions/$func"
-			fi
-		fi
-		/bin/chmod 744 "$HOME/run-commands/functions/$func"
-	fi
+  # Do  not overwrite Bash built-ins nor re-define set-alias
+  if [[ "$func" != "export.s" ]] && [[ "$func" != "unset.s" ]]; then
+    if [[ "$func" = *.s* ]]; then
+      set-alias "${func%.*}" "source $HOME/run-commands/functions/$func"
+    else
+      if [[ "$func" != "ssh" ]] || [[ "${__host__}" != "PC-${USER}" ]]; then
+        set-alias "${func%.*}" "$HOME/run-commands/functions/$func"
+      fi
+    fi
+    /bin/chmod 744 "$HOME/run-commands/functions/$func"
+  fi
 done < <(printf '%s\n' "$functions")
 unset __host__
 
@@ -87,6 +87,9 @@ export TC_NOCOLOR="\[\033[0m\]"
 
 # Source common envs
 source ~/run-commands/env/common
+
+# Source conda envs
+source ~/run-commands/env/conda
 
 # Source private envs. Leave it as the last to be sourced, so private envs gonna have higher prevalence
 test -e "$HOME/run-commands/env/.$USER" && source "$HOME/run-commands/env/.$USER"
