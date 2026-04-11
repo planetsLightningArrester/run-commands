@@ -12,6 +12,8 @@
 #      ! So, do not use "alias"! Use "set-alias"!
 #########################################################################################
 
-setenv shell_name "`basename "$SHELL"`"
-eval "$("${HOME}/apps/miniconda3/bin/conda" "shell.$shell_name" 'hook')"
-unsetenv shell_name
+if [[ -x "${HOME}/apps/miniconda3/bin/conda" ]]; then
+  setenv shell_name "$(basename "$SHELL")"
+  eval "$("${HOME}/apps/miniconda3/bin/conda" "shell.$shell_name" 'hook')"
+  unsetenv shell_name
+fi
